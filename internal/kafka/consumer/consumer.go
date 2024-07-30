@@ -2,6 +2,8 @@ package consumer
 
 import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/kanataidarov/gorm_kafka_docker/internal/config"
+	kfk "github.com/kanataidarov/gorm_kafka_docker/internal/kafka/util"
 	"github.com/kanataidarov/gorm_kafka_docker/pkg/common"
 	"log"
 	"os"
@@ -9,15 +11,10 @@ import (
 	"syscall"
 )
 
-func Handler() {
-	c, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers": "localhost:9093",
-		"group.id":          "applications02",
-		"auto.offset.reset": "earliest"})
-	common.ChkFatal(err, "Failed to create consumer")
+func Handler(cfg *config.Config) {
+	consumer := kfk.Singleton().Consumer
 
-	topic := "applications"
-	err = c.SubscribeTopics([]string{topic}, nil)
+	err := consumer.SubscribeTopics([]string{cfg.Kafka.Topic}, nil)
 
 	sigchan := make(chan os.Signal, 1)
 	signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM)
@@ -29,7 +26,7 @@ func Handler() {
 			log.Printf("Caught signal %v: terminating\n", sig)
 			run = false
 		default:
-			ev := c.Poll(100)
+			ev := consumer.Poll(99)
 			if ev == nil {
 				continue
 			}
@@ -48,6 +45,6 @@ func Handler() {
 		}
 	}
 
-	err = c.Close()
+	err = consumer.Close()
 	common.ChkFatal(err, "Error closing consumer")
 }

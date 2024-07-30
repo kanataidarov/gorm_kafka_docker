@@ -3,7 +3,9 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/kanataidarov/gorm_kafka_docker/internal/config"
 	"github.com/kanataidarov/gorm_kafka_docker/internal/db"
+	"github.com/kanataidarov/gorm_kafka_docker/internal/kafka/producer"
 	"github.com/kanataidarov/gorm_kafka_docker/pkg/common"
 	"gorm.io/gorm"
 	"net/http"
@@ -15,7 +17,7 @@ type ApplicationRequest struct {
 	Position string `json:"position"`
 }
 
-func CreateApplication(dbase *gorm.DB) http.HandlerFunc {
+func CreateApplication(cfg *config.Config, dbase *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -48,6 +50,8 @@ func CreateApplication(dbase *gorm.DB) http.HandlerFunc {
 			http.Error(w, "Couldn't process application", http.StatusInternalServerError)
 			return
 		}
+
+		_ = producer.Push(cfg, application)
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)

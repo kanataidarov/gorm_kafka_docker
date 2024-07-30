@@ -3,6 +3,7 @@ module github.com/kanataidarov/gorm_kafka_docker
 go 1.22.2
 
 require (
+	github.com/caarlos0/env/v11 v11.1.0
 	github.com/confluentinc/confluent-kafka-go v1.9.2
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.11
