@@ -41,7 +41,7 @@ func main() {
 	go func() {
 		defer wg.Done()
 
-		consumer.Handler(cfg)
+		consumer.Handler(cfg, dbase)
 	}()
 
 	wg.Wait()

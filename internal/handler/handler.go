@@ -45,18 +45,25 @@ func CreateApplication(cfg *config.Config, dbase *gorm.DB) http.HandlerFunc {
 			Position:   request.Position,
 			Assignment: *assignment,
 		}
-		err = db.Create(dbase, application)
+		application, err = db.CreateApplication(dbase, application)
 		if err != nil {
-			http.Error(w, "Couldn't process application", http.StatusInternalServerError)
+			http.Error(w, "Couldn't process application at creation stage", http.StatusInternalServerError)
 			return
 		}
 
-		_ = producer.Push(cfg, application)
+		err = producer.Push(cfg, application)
+		if err != nil {
+			http.Error(w, "Couldn't process application at publication stage", http.StatusInternalServerError)
+			return
+		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 		err = json.NewEncoder(w).Encode(map[string]interface{}{
 			"message": "Application processed successfully",
+			"assignment": map[string]interface{}{
+				"position": application.Assignment.Position,
+				"version":  application.Assignment.Version},
 		})
 		common.ChkWarn(err, "Error encoding response")
 	}

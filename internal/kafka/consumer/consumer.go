@@ -1,17 +1,20 @@
 package consumer
 
 import (
+	"encoding/json"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/kanataidarov/gorm_kafka_docker/internal/config"
+	"github.com/kanataidarov/gorm_kafka_docker/internal/db"
 	kfk "github.com/kanataidarov/gorm_kafka_docker/internal/kafka/util"
 	"github.com/kanataidarov/gorm_kafka_docker/pkg/common"
+	"gorm.io/gorm"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
-func Handler(cfg *config.Config) {
+func Handler(cfg *config.Config, dbase *gorm.DB) {
 	consumer := kfk.Singleton().Consumer
 
 	err := consumer.SubscribeTopics([]string{cfg.Kafka.Topic}, nil)
@@ -34,6 +37,7 @@ func Handler(cfg *config.Config) {
 			switch e := ev.(type) {
 			case *kafka.Message:
 				log.Printf("Message on %s: %s\n", e.TopicPartition, string(e.Value))
+				markSent(dbase, e.Value)
 			case kafka.Error:
 				log.Printf("Error: %v: %v\n", e.Code(), e)
 				if e.Code() == kafka.ErrAllBrokersDown {
@@ -47,4 +51,15 @@ func Handler(cfg *config.Config) {
 
 	err = consumer.Close()
 	common.ChkFatal(err, "Error closing consumer")
+}
+
+func markSent(dbase *gorm.DB, msg []byte) {
+	var application *db.Application
+	if err := json.Unmarshal(msg, &application); err != nil {
+		common.ChkWarn(err, "Error unmarshalling kafka message to application")
+		return
+	}
+
+	updated, _ := db.PatchApplication(dbase, *application)
+	log.Printf("Application ID=%d marked sent\n", updated.ID)
 }

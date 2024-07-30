@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"github.com/kanataidarov/gorm_kafka_docker/pkg/common"
 	"gorm.io/gorm"
 	"time"
@@ -32,9 +33,16 @@ func LastAssignment(dbase *gorm.DB, position string) (*Assignment, error) {
 	return &assignment, nil
 }
 
-func Create(dbase *gorm.DB, application Application) error {
+func CreateApplication(dbase *gorm.DB, application Application) (Application, error) {
 	err := dbase.Create(&application).Error
 	common.ChkWarn(err, "Error during creation of application")
 
-	return err
+	return application, err
+}
+
+func PatchApplication(dbase *gorm.DB, application Application) (Application, error) {
+	err := dbase.Model(&application).Update("assignment_sent", time.Now()).Error
+	common.ChkWarn(err, fmt.Sprintf("Error during patching of application. ID=%d", application.ID))
+
+	return application, err
 }
