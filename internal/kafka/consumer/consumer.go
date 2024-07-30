@@ -2,6 +2,7 @@ package consumer
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/kanataidarov/gorm_kafka_docker/internal/config"
 	"github.com/kanataidarov/gorm_kafka_docker/internal/db"
@@ -9,23 +10,20 @@ import (
 	"github.com/kanataidarov/gorm_kafka_docker/pkg/common"
 	"gorm.io/gorm"
 	"log"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 func Handler(cfg *config.Config, dbase *gorm.DB) {
 	consumer := kfk.Singleton().Consumer
 
 	err := consumer.SubscribeTopics([]string{cfg.Kafka.Topic}, nil)
+	common.ChkWarn(err, fmt.Sprintf("Error subscribing to topic \"%s\"", cfg.Kafka.Topic))
 
-	sigchan := make(chan os.Signal, 1)
-	signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM)
+	sigChan := common.SysInterrupt()
 
 	run := true
 	for run {
 		select {
-		case sig := <-sigchan:
+		case sig := <-sigChan:
 			log.Printf("Caught signal %v: terminating\n", sig)
 			run = false
 		default:
