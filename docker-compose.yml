@@ -73,14 +73,14 @@ services:
       broker:
         condition: service_healthy
     environment:
-      DB_HOST: ${DB_HOST:-localhost}
-      DB_PORT: ${DB_PORT:-44048}
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-5432}
       DB_NAME: ${DB_NAME:-applications}
       DB_USER: ${DB_USER:-postgres}
       DB_PWD: ${DB_PWD}
       DB_TZ: ${DB_TZ:-Asia/Qyzylorda}
       DB_SSL: ${DB_SSL:-disable}
       SRV_PORT: ${SRV_PORT:-44049}
-      BROKERS: ${BROKERS:-localhost\:9092}
+      BROKERS: ${BROKERS:-broker\:9092}
       TOPIC: ${TOPIC:-applications}
       GROUP_ID: ${GROUP_ID:-applications}
