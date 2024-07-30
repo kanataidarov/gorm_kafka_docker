@@ -31,7 +31,7 @@ func main() {
 	go func() {
 		defer wg.Done()
 
-		http.HandleFunc("/applications", handler.CreateApplication(cfg, dbase))
+		http.HandleFunc("/applications", handler.ApplicationsHandler(cfg, dbase))
 
 		port := cfg.Handler.Port
 		log.Printf("Handler is running on port %d\n", port)
