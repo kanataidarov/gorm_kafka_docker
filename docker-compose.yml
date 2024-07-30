@@ -1,26 +1,34 @@
 services:
   # postgres
   db:
-    image: postgres:16-alpine
+    image: postgres:alpine
     container_name: postgres
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PWD}
       TZ: Asia/Qyzylorda
     volumes:
       - ./script/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     ports:
-      - "44048:5432"
+      - "${DB_PORT:-44048}:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U postgres -d applications'" ]
+      interval: 10s
+      timeout: 60s
+      retries: 20
   adminer:
     image: adminer
     container_name: adminer
+    depends_on:
+      db:
+        condition: service_healthy
     restart: unless-stopped
     ports:
       - "44047:8080"
 
   # kafka
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.7.0
+    image: confluentinc/cp-zookeeper
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -29,7 +37,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
   broker:
-    image: confluentinc/cp-kafka:7.7.0
+    image: confluentinc/cp-kafka
     hostname: broker
     container_name: broker
     depends_on:
@@ -42,11 +50,37 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://broker:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_JMX_PORT: 9101
-      KAFKA_JMX_HOSTNAME: localhost
-      KAFKA_CREATE_TOPICS: "applications:1:1"
+    healthcheck:
+      test: [ "CMD-SHELL", "nc -zv broker 9092" ]
+      interval: 10s
+      timeout: 60s
+      retries: 20
+
+  # app
+  app:
+    build: .
+    container_name: app
+    ports:
+      - "${SRV_PORT:-44049}:${SRV_PORT:-44049}"
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      broker:
+        condition: service_healthy
+    environment:
+      DB_HOST: ${DB_HOST:-localhost}
+      DB_PORT: ${DB_PORT:-44048}
+      DB_NAME: ${DB_NAME:-applications}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PWD: ${DB_PWD}
+      DB_TZ: ${DB_TZ:-Asia/Qyzylorda}
+      DB_SSL: ${DB_SSL:-disable}
+      SRV_PORT: ${SRV_PORT:-44049}
+      BROKERS: ${BROKERS:-localhost\:9092}
+      TOPIC: ${TOPIC:-applications}
+      GROUP_ID: ${GROUP_ID:-applications}

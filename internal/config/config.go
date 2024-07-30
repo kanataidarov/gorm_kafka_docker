@@ -22,7 +22,7 @@ type Db struct {
 }
 
 type Handler struct {
-	Port int `env:"PORT" envDefault:"44049"`
+	Port int `env:"SRV_PORT" envDefault:"44049"`
 }
 
 type Kafka struct {

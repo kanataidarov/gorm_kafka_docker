@@ -23,15 +23,15 @@ func Init(cfg *config.Config) {
 	defer mutex.Unlock()
 
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
-		"bootstrap.servers":        cfg.Kafka.Brokers,
-		"acks":                     "all",
-		"allow.auto.create.topics": true})
+		"bootstrap.servers": cfg.Kafka.Brokers,
+		"acks":              "all"})
 	common.ChkFatal(err, "Failed to create producer")
 
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers": cfg.Kafka.Brokers,
-		"group.id":          cfg.Kafka.GroupId,
-		"auto.offset.reset": "earliest"})
+		"bootstrap.servers":        cfg.Kafka.Brokers,
+		"group.id":                 cfg.Kafka.GroupId,
+		"auto.offset.reset":        "earliest",
+		"allow.auto.create.topics": true})
 	common.ChkFatal(err, "Failed to create consumer")
 
 	_producer = p
