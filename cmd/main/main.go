@@ -35,7 +35,13 @@ func main() {
 
 		http.HandleFunc("/applications", handler.ApplicationsHandler(cfg, dbase))
 
-		addr := fmt.Sprintf("%s:%d", cfg.Handler.Host, getPort(cfg))
+		var addr string
+		if cfg.Kafka.IsLocal {
+			addr = fmt.Sprintf(":%d", getPort(cfg))
+		} else {
+			addr = fmt.Sprintf("%s:%d", cfg.Handler.Host, getPort(cfg))
+		}
+
 		common.ChkFatal(http.ListenAndServe(addr, nil), "Failed to start web handler")
 		log.Println("Handler is running on " + addr)
 	}()
