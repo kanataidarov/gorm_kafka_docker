@@ -6,10 +6,10 @@
 
 ## Удаленный запуск
 ### Пререквизиты
-- HTTP-клиент или браузер.
+- HTTP-клиент.
 
 ### Запуск
-API доступно для вызова на ` `. \
+API доступно для вызова на `https://messaggio-assignment-99487939e4bb.herokuapp.com`. \
 Далее этот URL будет помечаться как `<Базовый URL>`.
 
 ### Отправка через HTTP API
@@ -24,7 +24,7 @@ API доступно для вызова на ` `. \
 
 Пример отправки через curl:
 ```shell
-curl --location 'https://messaggio-assignment-99487939e4bb.herokuapp.com/applications' \
+curl --location 'https://messaggio-assignment-99487939e4bb.herokuapp.com/applications' \                                                                      git:main*
 --request POST \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -32,23 +32,27 @@ curl --location 'https://messaggio-assignment-99487939e4bb.herokuapp.com/applica
     "email": "kanataidarov@yahoo.com",
     "position": "Junior Go Developer"
 }'
+
+{"assignment":{"position":"Junior Go Developer","version":3},"message":"Application processed successfully"}
 ```
 Пример отправки через Postman: \
 ![image](https://github.com/user-attachments/assets/47f8d232-0c63-4b69-8ca6-f9fd5ed17aa4)
 
 ### Получение статистики
 На `<Базовый URL>/application` отправить методом HTTP GET. \
+
 Пример отправки через curl:
 ```shell
-curl --location 'https://messaggio-assignment-99487939e4bb.herokuapp.com/applications' \
---request POST --header 'Content-Type: application/json'
+url --location 'https://messaggio-assignment-99487939e4bb.herokuapp.com/applications' \                                                                      git:main*
+--request GET --header 'Content-Type: application/json'
+
+[{"name":"Канат Айдаров","email":"kanataidarov@yahoo.com","position":"Junior Go Developer","processed":true},{"name":"Иван Федеров","email":"ivanf@yahoo.com","position":"Junior Go Developer","processed":true}]
 ```
 
 Пример отправки через Postman: \
 ![image](https://github.com/user-attachments/assets/b1e6bc35-72d7-4a37-b169-3bb5ba3d2561)
 
 ## Локальный запуск
-
 ### Пререквизиты
 - Golang версии 1.22+. [Инструкции по установке](https://go.dev/doc/install)
 - Docker. [Инструкции по установке](https://docs.docker.com/get-docker/)
