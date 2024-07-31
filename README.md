@@ -24,7 +24,7 @@ API доступно для вызова на ` `. \
 
 Пример отправки через curl:
 ```shell
-curl --location '<Базовый URL>/applications' \
+curl --location 'https://messaggio-assignment-99487939e4bb.herokuapp.com/applications' \
 --request POST \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -34,17 +34,18 @@ curl --location '<Базовый URL>/applications' \
 }'
 ```
 Пример отправки через Postman: \
-![image](https://github.com/user-attachments/assets/a50972b9-3ab0-4974-8828-7c43a1b83749)
+![image](https://github.com/user-attachments/assets/47f8d232-0c63-4b69-8ca6-f9fd5ed17aa4)
 
 ### Получение статистики
 На `<Базовый URL>/application` отправить методом HTTP GET. \
 Пример отправки через curl:
 ```shell
-curl --location --request GET '<Базовый URL>/applications'
+curl --location 'https://messaggio-assignment-99487939e4bb.herokuapp.com/applications' \
+--request POST --header 'Content-Type: application/json'
 ```
 
 Пример отправки через Postman: \
-![image](https://github.com/user-attachments/assets/184f367d-1a3a-4208-993e-7d0a8cdcae64)
+![image](https://github.com/user-attachments/assets/6f877029-1cef-44ce-a792-b3cfd1f46bb2)
 
 ## Локальный запуск
 
