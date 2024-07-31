@@ -30,6 +30,8 @@ type Kafka struct {
 	Topic   string `env:"KFK_TOPIC" envDefault:"applications"`
 	GroupId string `env:"KFK_GROUPID" envDefault:"applications"`
 	IsLocal bool   `env:"KFK_LOCAL" envDefault:"true"`
+	User    string `env:"KFK_USER"`
+	Pwd     string `env:"KFK_PWD"`
 }
 
 func Load() *Config {

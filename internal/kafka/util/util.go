@@ -21,8 +21,12 @@ type Instance struct {
 func KafkaConfig(cfg *config.Config) kafka.ConfigMap {
 	kc := make(map[string]kafka.ConfigValue)
 
-	if cfg.Kafka.IsLocal {
-		kc["bootstrap.servers"] = cfg.Kafka.Brokers
+	kc["bootstrap.servers"] = cfg.Kafka.Brokers
+	if !cfg.Kafka.IsLocal {
+		kc["sasl.username"] = cfg.Kafka.User
+		kc["sasl.password"] = cfg.Kafka.Pwd
+		kc["security.protocol"] = "SASL_SSL"
+		kc["sasl.mechanisms"] = "PLAIN"
 	}
 
 	return kc
