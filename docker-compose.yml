@@ -4,7 +4,7 @@ services:
     image: postgres:alpine
     container_name: postgres
     environment:
-      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PWD}
       TZ: Asia/Qyzylorda
     volumes:
@@ -76,7 +76,7 @@ services:
       DB_HOST: ${DB_HOST:-db}
       DB_PORT: ${DB_PORT:-5432}
       DB_NAME: ${DB_NAME:-applications}
-      DB_USER: ${DB_USER:-postgres}
+      DB_USER: ${DB_USER}
       DB_PWD: ${DB_PWD}
       DB_TZ: ${DB_TZ:-Asia/Qyzylorda}
       DB_SSL: ${DB_SSL:-disable}

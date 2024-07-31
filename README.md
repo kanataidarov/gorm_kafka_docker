@@ -32,10 +32,8 @@ curl --location '<Базовый URL>/applications' \
     "position": "Junior Go Developer"
 }'
 ```
-Пример отправки через Postman:
-```shell
+Пример отправки через Postman: \
 
-```
 
 ### Получение статистики
 На `<Базовый URL>/application` отправить методом HTTP GET.
@@ -43,10 +41,8 @@ curl --location '<Базовый URL>/applications' \
 ```shell
 curl --location --request GET '<Базовый URL>/applications'
 ```
-Пример отправки через Postman:
-```shell
+Пример отправки через Postman: \
 
-```
 
 ## Локальный запуск
 
