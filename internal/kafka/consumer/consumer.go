@@ -3,7 +3,7 @@ package consumer
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/kanataidarov/gorm_kafka_docker/internal/config"
 	"github.com/kanataidarov/gorm_kafka_docker/internal/db"
 	kfk "github.com/kanataidarov/gorm_kafka_docker/internal/kafka/util"

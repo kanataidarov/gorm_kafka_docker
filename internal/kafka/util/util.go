@@ -1,7 +1,7 @@
 package util
 
 import (
-	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/kanataidarov/gorm_kafka_docker/internal/config"
 	"github.com/kanataidarov/gorm_kafka_docker/pkg/common"
 	"sync"
@@ -27,6 +27,7 @@ func KafkaConfig(cfg *config.Config) kafka.ConfigMap {
 		kc["sasl.password"] = cfg.Kafka.Pwd
 		kc["security.protocol"] = "SASL_SSL"
 		kc["sasl.mechanisms"] = "PLAIN"
+		kc["enable.ssl.certificate.verification"] = "false"
 	}
 
 	return kc

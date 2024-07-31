@@ -1,6 +1,6 @@
 FROM --platform=linux/amd64 golang:1.22.2-alpine AS builder
 
-RUN apk add --no-progress --no-cache gcc musl-dev
+RUN apk add bash ca-certificates gcc musl-dev
 
 WORKDIR /build
 COPY . .
