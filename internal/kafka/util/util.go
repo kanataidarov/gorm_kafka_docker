@@ -18,20 +18,30 @@ type Instance struct {
 	Consumer *kafka.Consumer
 }
 
+func KafkaConfig(cfg *config.Config) kafka.ConfigMap {
+	kc := make(map[string]kafka.ConfigValue)
+
+	if cfg.Kafka.IsLocal {
+		kc["bootstrap.servers"] = cfg.Kafka.Brokers
+	}
+
+	return kc
+}
+
 func Init(cfg *config.Config) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
-	p, err := kafka.NewProducer(&kafka.ConfigMap{
-		"bootstrap.servers": cfg.Kafka.Brokers,
-		"acks":              "all"})
+	producerCfg := KafkaConfig(cfg)
+	producerCfg["acks"] = "all"
+	p, err := kafka.NewProducer(&producerCfg)
 	common.ChkFatal(err, "Failed to create producer")
 
-	c, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers":        cfg.Kafka.Brokers,
-		"group.id":                 cfg.Kafka.GroupId,
-		"auto.offset.reset":        "earliest",
-		"allow.auto.create.topics": true})
+	consumerCfg := KafkaConfig(cfg)
+	consumerCfg["group.id"] = cfg.Kafka.GroupId
+	consumerCfg["auto.offset.reset"] = "earliest"
+	consumerCfg["allow.auto.create.topics"] = true
+	c, err := kafka.NewConsumer(&consumerCfg)
 	common.ChkFatal(err, "Failed to create consumer")
 
 	_producer = p

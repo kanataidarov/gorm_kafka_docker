@@ -26,9 +26,10 @@ type Handler struct {
 }
 
 type Kafka struct {
-	Brokers string `env:"BROKERS" envDefault:"localhost:9092"`
-	Topic   string `env:"TOPIC" envDefault:"applications"`
-	GroupId string `env:"GROUP_ID" envDefault:"applications"`
+	Brokers string `env:"KFK_BROKERS" envDefault:"localhost:9092"`
+	Topic   string `env:"KFK_TOPIC" envDefault:"applications"`
+	GroupId string `env:"KFK_GROUPID" envDefault:"applications"`
+	IsLocal bool   `env:"KFK_LOCAL" envDefault:"true"`
 }
 
 func Load() *Config {
