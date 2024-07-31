@@ -45,7 +45,7 @@ curl --location 'https://messaggio-assignment-99487939e4bb.herokuapp.com/applica
 ```
 
 Пример отправки через Postman: \
-![image](https://github.com/user-attachments/assets/6f877029-1cef-44ce-a792-b3cfd1f46bb2)
+![image](https://github.com/user-attachments/assets/25317510-e636-4fd1-ac9e-02b4888f06b6)
 
 ## Локальный запуск
 
