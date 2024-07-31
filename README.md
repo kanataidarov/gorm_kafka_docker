@@ -21,6 +21,7 @@ API доступно для вызова на ` `. \
     "position": "Junior Go Developer"
 }
 ```
+
 Пример отправки через curl:
 ```shell
 curl --location '<Базовый URL>/applications' \
@@ -36,11 +37,12 @@ curl --location '<Базовый URL>/applications' \
 ![image](https://github.com/user-attachments/assets/a50972b9-3ab0-4974-8828-7c43a1b83749)
 
 ### Получение статистики
-На `<Базовый URL>/application` отправить методом HTTP GET.
+На `<Базовый URL>/application` отправить методом HTTP GET. \
 Пример отправки через curl:
 ```shell
 curl --location --request GET '<Базовый URL>/applications'
 ```
+
 Пример отправки через Postman: \
 ![image](https://github.com/user-attachments/assets/184f367d-1a3a-4208-993e-7d0a8cdcae64)
 
