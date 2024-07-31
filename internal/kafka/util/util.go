@@ -1,7 +1,7 @@
 package util
 
 import (
-	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/kanataidarov/gorm_kafka_docker/internal/config"
 	"github.com/kanataidarov/gorm_kafka_docker/pkg/common"
 	"sync"

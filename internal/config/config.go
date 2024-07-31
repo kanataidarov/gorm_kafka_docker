@@ -13,7 +13,7 @@ type Config struct {
 
 type Db struct {
 	Host     string `env:"DB_HOST" envDefault:"localhost"`
-	Port     int    `env:"DB_PORT" envDefault:"44048"`
+	Port     int    `env:"DB_PORT" envDefault:"5432"`
 	DbName   string `env:"DB_NAME" envDefault:"applications"`
 	User     string `env:"DB_USER" envDefault:"postgres"`
 	Password string `env:"DB_PWD"`
