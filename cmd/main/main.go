@@ -11,6 +11,8 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"sync"
 )
 
@@ -33,9 +35,9 @@ func main() {
 
 		http.HandleFunc("/applications", handler.ApplicationsHandler(cfg, dbase))
 
-		port := cfg.Handler.Port
-		log.Printf("Handler is running on port %d\n", port)
-		common.ChkFatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil), "Failed to start web handler")
+		addr := fmt.Sprintf("%s:%d", cfg.Handler.Host, getPort(cfg))
+		common.ChkFatal(http.ListenAndServe(addr, nil), "Failed to start web handler")
+		log.Println("Handler is running on " + addr)
 	}()
 
 	go func() {
@@ -48,4 +50,17 @@ func main() {
 
 	kfk.Singleton().Producer.Close()
 	log.Println("Stopping messaggio_assignment")
+}
+
+func getPort(cfg *config.Config) int {
+	if envVar, ok := os.LookupEnv("PORT"); ok {
+		port, err := strconv.Atoi(envVar)
+		if err != nil {
+			common.ChkWarn(err, fmt.Sprintf("Failed to convert PORT envvar. Setting handler port: %d", cfg.Handler.Port))
+			return cfg.Handler.Port
+		}
+		return port
+
+	}
+	return cfg.Handler.Port
 }

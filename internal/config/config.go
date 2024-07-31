@@ -22,7 +22,8 @@ type Db struct {
 }
 
 type Handler struct {
-	Port int `env:"SRV_PORT" envDefault:"44049"`
+	Host string `env:"SRV_HOST" envDefault:"localhost"`
+	Port int    `env:"SRV_PORT" envDefault:"44049"`
 }
 
 type Kafka struct {
