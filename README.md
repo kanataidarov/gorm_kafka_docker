@@ -1,30 +1,37 @@
-# messaggio_assignment
-## Тестовое задание от Messaggio на вакансию Junior Go Developer
-Разработать микросервис на Go, который будет принимать сообщения через HTTP API, сохранять их в PostgreSQL, 
-а затем отправлять в Kafka для дальнейшей обработки. Обработанные сообщения должны помечаться. 
-Сервис должен также предоставлять API для получения статистики по обработанным сообщениям.
+# Golang REST API with GORM + Kafka + Docker
 
-## Удаленный запуск
-### Пререквизиты
-- HTTP-клиент.
+A microservice in Go that will accept messages via HTTP API, save them in PostgreSQL using GORM, and then send them to Kafka for further processing. \
+Processed messages are read by another Kafka consumer, and the message is marked as processed in the database. \
+The service also provides an API to retrieve statistics on processed messages. \
+The solution is packaged in a Docker deployment: containers will be created for PostgreSQL, Apache Kafka, and the application itself.
 
-### Запуск
-API доступно для вызова на `https://messaggio-assignment-99487939e4bb.herokuapp.com`. \
-Далее этот URL будет помечаться как `<Базовый URL>`.
+## Local Setup
 
-### Отправка через HTTP API
-На `<Базовый URL>/applications`, методом HTTP POST, отправить тестовый payload: 
+### Prerequisites
+- Golang version 1.22+. [Installation instructions](https://go.dev/doc/install)
+- Docker. [Installation instructions](https://docs.docker.com/get-docker/)
+- docker-compose. [Installation instructions](https://docs.docker.com/compose/install/standalone/)
+
+### Launch
+- For `Windows`, in CMD, run `./start.bat` from the project root.
+- For `Linux / MacOS`, in the terminal, run `./start.sh` from the project root.
+
+After that API will be available at http://localhost:44049. \
+Further it will referred as `<Base URL>`.
+
+### Sending with HTTP API
+Send HTTP POST request `<Base URL>/applications` with payload: 
 ```json
 {
-    "name": "Канат Айдаров",
+    "name": "Kanat Aidarov",
     "email": "kanataidarov@yahoo.com",
     "position": "Junior Go Developer"
 }
 ```
 
-Пример отправки через curl:
+Example of sending with `curl`:
 ```shell
-curl --location 'https://messaggio-assignment-99487939e4bb.herokuapp.com/applications' \                                                                      git:main*
+curl --location 'https://localhost:44049/applications' \                                                                      git:main*
 --request POST \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -35,32 +42,14 @@ curl --location 'https://messaggio-assignment-99487939e4bb.herokuapp.com/applica
 
 {"assignment":{"position":"Junior Go Developer","version":3},"message":"Application processed successfully"}
 ```
-Пример отправки через Postman: \
-![image](https://github.com/user-attachments/assets/47f8d232-0c63-4b69-8ca6-f9fd5ed17aa4)
 
-### Получение статистики
-На `<Базовый URL>/application` отправить методом HTTP GET. \
+### Retrieving statistics 
+Send HTTP GET request `<Base URL>/application`. \
 
-Пример отправки через curl:
+xample of sending with `curl`:
 ```shell
-url --location 'https://messaggio-assignment-99487939e4bb.herokuapp.com/applications' \                                                                      git:main*
+url --location 'https://localhost:44049/applications' \                                                                      git:main*
 --request GET --header 'Content-Type: application/json'
 
 [{"name":"Канат Айдаров","email":"kanataidarov@yahoo.com","position":"Junior Go Developer","processed":true},{"name":"Иван Федеров","email":"ivanf@yahoo.com","position":"Junior Go Developer","processed":true}]
 ```
-
-Пример отправки через Postman: \
-![image](https://github.com/user-attachments/assets/b1e6bc35-72d7-4a37-b169-3bb5ba3d2561)
-
-## Локальный запуск
-### Пререквизиты
-- Golang версии 1.22+. [Инструкции по установке](https://go.dev/doc/install)
-- Docker. [Инструкции по установке](https://docs.docker.com/get-docker/)
-- docker-compose. [Инструкции по установке](https://docs.docker.com/compose/install/standalone/)
-
-### Запуск
-- Для `Windows`, в CMD, набрать `./start.bat`, находясь в корне проекта. 
-- Для `Linux / MacOS`, в терминале, набрать `./start.sh`, находясь в корне проекта.
-
-После этого, API будет доступно по базовому URL: http://localhost:44049. \
-Использование API аналогично разделам удаленного запуска. 
